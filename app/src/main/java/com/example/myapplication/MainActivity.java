@@ -126,7 +126,8 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.logout)
         {
-
+            Intent intent = new Intent(getApplicationContext(), SplashActivativity.class);
+            startActivity(intent);
         }
         else if(id == R.id.destination)
         {
