@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.Manifest;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,10 +28,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
-        , OnMapReadyCallback{
+        , OnMapReadyCallback {
+
+    String username;
+    String hello_msg;
+    NavigationView sidebar;
+    Menu sidebar_menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +43,41 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         setTitle("EveryTaxi");
 
+        SharedPreferences sharedPreferences = getSharedPreferences("cookie", MODE_PRIVATE);
+
+        hello_msg = sharedPreferences.getString("hello_msg", "");
+
+        username = sharedPreferences.getString("username", "");
+
+        if (hello_msg.equals("Hello")) {
+            Toast.makeText(this, username + "님 환영합니다!", Toast.LENGTH_SHORT).show();
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.remove("hello_msg");
+
+            editor.commit();
+        }
+
+        sidebar = (NavigationView) findViewById(R.id.nav_view);
+
+        sidebar_menu = sidebar.getMenu();
+
+        if (username == "") // 로그인 하지 않은 상태
+        {
+            sidebar_menu.findItem(R.id.logout_menu).setVisible(false); // 로그아웃 제거
+        } else {
+            sidebar_menu.findItem(R.id.sign_in_menu).setVisible(false); // 로그인 제거
+            sidebar_menu.findItem(R.id.sign_up_menu).setVisible(false); // 회원가입 제거
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
-            }
-            else {
+            } else {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         1);
@@ -52,7 +85,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         FragmentManager fragmentManager = getFragmentManager();
-        MapFragment mapFragment = (MapFragment)fragmentManager
+        MapFragment mapFragment = (MapFragment) fragmentManager
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -88,7 +121,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.main, menu);
+
         return true;
     }
 
@@ -109,36 +144,40 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item)
-    {
+    public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.sign_in)
-        {
+        if (id == R.id.sign_in_menu) {
             Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
 
             startActivity(intent);
-        }
-        else if (id == R.id.sign_up)
-        {
+        } else if (id == R.id.sign_up_menu) {
             Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+
             startActivity(intent);
-        }
-        else if (id == R.id.logout)
-        {
-            Intent intent = new Intent(getApplicationContext(), SplashActivativity.class);
+        } else if (id == R.id.logout_menu) {
+            SharedPreferences sharedPreferences = getSharedPreferences("cookie", MODE_PRIVATE);
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.remove("username");
+
+            editor.commit();
+
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
             startActivity(intent);
-        }
-        else if(id == R.id.destination)
-        {
+
+            finish();
+        } else if (id == R.id.destination_menu) {
 
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     @Override
     public void onMapReady(final GoogleMap map) {
 

@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
 
     <application
         android:allowBackup="true"
@@ -34,6 +36,8 @@
 
         <activity android:name=".SignInActivity" android:label="로그인"/>
         <activity android:name=".SignUpActivity" android:label="회원가입"/>
+        <activity android:name=".SplashActivativity" android:label="로딩창"/>
+        <activity android:name=".MessageActivity" android:label="채팅"/>
     </application>
 
 </manifest>
