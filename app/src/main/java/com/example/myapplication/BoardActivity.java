@@ -611,10 +611,22 @@ public class BoardActivity extends AppCompatActivity
                     if (quit_result.equals("Destroy Room"))
                     {
                         Toast.makeText(BoardActivity.this, "성공적으로 방이 제거되었습니다.", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(getApplicationContext(), BoardActivity.class);
+
+                        intent.putExtra("src_name", src_name);
+
+                        startActivity(intent);
                     }
                     else if (quit_result.equals("Quit"))
                     {
                         Toast.makeText(BoardActivity.this, "성공적으로 방에서 나왔습니다.", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(getApplicationContext(), BoardActivity.class);
+
+                        intent.putExtra("src_name", src_name);
+
+                        startActivity(intent);
                     }
                     else if (quit_result.equals("No Room"))
                     {
