@@ -55,8 +55,7 @@ public class MessageActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.message_main);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, //context(액티비티 인스턴스)
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, //context(액티비티 인스턴스)
                 android.R.layout.simple_list_item_1, // 한 줄에 하나의 텍스트 아이템만 보여주는 레이아웃 파일
                 android.R.id.text1  // 데이터가 저장되어 있는 ArrayList 객체
         );
